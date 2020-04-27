@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Disable & Stop OpenVPN
+for CONFIG_NAME in $(systemctl list-units "openvpn-server@*" --no-legend | cut -d ' ' -f 1)
+do
+    systemctl disable --now "${CONFIG_NAME}"
+done
+
+# Delete OpenVPN Configuration
+rm -rf /etc/openvpn/server/*
+
+# Regenerate OpenVPN Configuration 
+vpn-server-node-server-config
+
+# Enable & Start OpenVPN
+for CONFIG_NAME in /etc/openvpn/server/*.conf
+do
+    CONFIG_NAME=$(basename "${CONFIG_NAME}" .conf)
+    systemctl enable --now "openvpn-server@${CONFIG_NAME}"
+done

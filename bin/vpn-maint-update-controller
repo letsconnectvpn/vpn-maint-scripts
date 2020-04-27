@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Stop Web Server
+systemctl stop httpd
+systemctl stop php-fpm
+
+# Install Updates
+if [ -x "$(command -v dnf)" ]; then
+    dnf -y --refresh update
+elif [ -x "$(command -v yum)" ]; then
+    yum clean expire-cache
+    yum -y update
+else
+    echo "No dnf or yum available!"
+    exit 1
+fi
+
+# Start Web Server
+systemctl start php-fpm
+systemctl start httpd
