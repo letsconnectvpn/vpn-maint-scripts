@@ -7,10 +7,10 @@ This is a collection of scripts for maintaining your VPN server(s).
 On a single system, i.e. you are using only one physical machine or VM you 
 can use the following scripts:
 
-| Script                    | Function                                                                     |
-|-------------------------- | ---------------------------------------------------------------------------- |
-| `vpn-maint-apply-changes` | Apply all outstanding configuration changes for the OpenVPN daemon           |
-| `vpn-maint-update-system` | Stop services, install updates, update OpenVPN configuration, start services |
+| Script                    | Function                                                                               |
+|-------------------------- | -------------------------------------------------------------------------------------- |
+| `vpn-maint-apply-changes` | Apply all outstanding configuration changes for the OpenVPN daemon and restart OpenVPN |
+| `vpn-maint-update-system` | Stop services, install updates, update OpenVPN configuration, start services           |
 
 # Controller / Node(s)
 
@@ -30,9 +30,9 @@ When having a controller and node(s), you use the following scripts:
 `vpn-maint-update-controller` on the controller. Then run 
 `vpn-maint-update-node` and then `vpn-maint-start-node`.
 
-| Script                    | Function                                                           |
-|-------------------------- | ------------------------------------------------------------------ |
-| `vpn-maint-apply-changes` | Apply all outstanding configuration changes for the OpenVPN daemon |
-| `vpn-maint-stop-node`     | Stop OpenVPN processes                                             |
-| `vpn-maint-update-node`   | Install updates, update OpenVPN configuration                      |
-| `vpn-maint-start-node`    | Start OpenVPN processes                                            |
+| Script                    | Function                                                                               |
+|-------------------------- | -------------------------------------------------------------------------------------- |
+| `vpn-maint-apply-changes` | Apply all outstanding configuration changes for the OpenVPN daemon and restart OpenVPN |
+| `vpn-maint-stop-node`     | Stop OpenVPN processes                                                                 |
+| `vpn-maint-update-node`   | Install updates, update OpenVPN configuration                                          |
+| `vpn-maint-start-node`    | Start OpenVPN processes                                                                |
