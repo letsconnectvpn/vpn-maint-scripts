@@ -1,3 +1,7 @@
 #!/bin/sh
 
+if ! [ "root" = "$(id -u -n)" ]; then
+    echo "ERROR: ${0} must be run as root!"; exit 1
+fi
+
 systemctl start openvpn-server@\* --all

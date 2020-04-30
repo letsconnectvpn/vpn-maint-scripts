@@ -1,0 +1,59 @@
+#!/bin/sh
+
+if ! [ "root" = "$(id -u -n)" ]; then
+    echo "ERROR: ${0} must be run as root!"; exit 1
+fi
+
+echo "*****************************************************************"
+echo "*                                                               *"
+echo "* Are you sure you want to RESET your VPN server configuration? *" 
+echo "*                                                               *"
+echo "*                 THIS CAN *NOT* BE UNDONE!                     *"
+echo "*                                                               *"
+echo "*****************************************************************"
+echo
+printf "Continue? [n]: "; read -r CONFIRM
+if ! [ "${CONFIRM}" = "y" ]; then
+    exit 1
+fi
+
+# Disable & Stop OpenVPN
+for CONFIG_NAME in $(systemctl list-units "openvpn-server@*" --no-legend | cut -d ' ' -f 1)
+do
+    systemctl disable --now "${CONFIG_NAME}"
+done
+
+# Delete OpenVPN Configuration
+rm -rf /etc/openvpn/server/*
+
+systemctl stop httpd
+systemctl stop php-fpm
+
+# Remove Data
+rm -rf /var/lib/vpn-server-api/*
+rm -rf /var/lib/vpn-user-portal/*
+rm -f /etc/vpn-user-portal/oauth.key
+
+# Remove PHP Sessions
+rm -rf /var/lib/php/session/*
+
+# Initialize Database(s)
+sudo -u apache vpn-user-portal-init
+vpn-user-portal-generate-oauth-key
+sudo -u apache vpn-server-api-init
+
+# Regenerate Internal API Secrets
+vpn-server-api-update-api-secrets
+
+systemctl start php-fpm
+systemctl start httpd
+
+# Regenerate OpenVPN Configuration 
+vpn-server-node-server-config
+
+# Enable & Start OpenVPN
+for CONFIG_NAME in /etc/openvpn/server/*.conf
+do
+    CONFIG_NAME=$(basename "${CONFIG_NAME}" .conf)
+    systemctl enable --now "openvpn-server@${CONFIG_NAME}"
+done

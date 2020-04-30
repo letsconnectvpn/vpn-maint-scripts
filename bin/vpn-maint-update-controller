@@ -1,5 +1,14 @@
 #!/bin/sh
 
+if ! [ "root" = "$(id -u -n)" ]; then
+    echo "ERROR: ${0} must be run as root!"; exit 1
+fi
+
+printf "Did you stop your node(s) first? [n]: "; read -r CONFIRM
+if ! [ "${CONFIRM}" = "y" ]; then
+    exit 1
+fi
+
 # Stop Web Server
 systemctl stop httpd
 systemctl stop php-fpm

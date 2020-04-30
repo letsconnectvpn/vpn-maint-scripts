@@ -11,6 +11,12 @@ can use the following scripts:
 |-------------------------- | -------------------------------------------------------------------------------------- |
 | `vpn-maint-apply-changes` | Apply all outstanding configuration changes for the OpenVPN daemon and restart OpenVPN |
 | `vpn-maint-update-system` | Stop services, install updates, update OpenVPN configuration, start services           |
+| `vpn-maint-reset-system`  | Full *data* RESET. Configuration remains! Users deleted, New CA, new OAuth key, ...    |
+
+The `vpn-maint-reset-system` script is useful when you are testing with your 
+VPN server install and want to go to production. It will keep the server 
+configuration, but throw away all users, reset the CA and OAuth key. Clients 
+will be forced to authorize/authenticate again.
 
 # Controller / Node(s)
 
