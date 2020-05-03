@@ -20,6 +20,8 @@ This is a collection of scripts for maintaining your VPN server(s).
 
 ### Update
 
+**NOTE**: first stop the node(s)!
+
     $ sudo vpn-maint-update-controller
 
 ### Reset
@@ -34,10 +36,18 @@ This is a collection of scripts for maintaining your VPN server(s).
 
 ### Update
 
+**NOTE**: after stopping the node(s) update the controller!
+
     $ sudo vpn-maint-stop-node
+
+After stopping the node(s), update the controller first before continuing!
+
     $ sudo vpn-maint-update-node
     $ sudo vpn-maint-start-node
 
 ### Reset
+
+There is no need to reset the node(s) as applying changes takes care of that
+already.
 
     $ sudo vpn-maint-apply-changes
