@@ -42,9 +42,6 @@ sudo -u apache vpn-user-portal-init
 vpn-user-portal-generate-oauth-key
 sudo -u apache vpn-server-api-init
 
-# Regenerate Internal API Secrets
-vpn-server-api-update-api-secrets
-
 systemctl start php-fpm
 systemctl start httpd
 
