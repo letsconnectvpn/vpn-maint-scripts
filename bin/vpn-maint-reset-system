@@ -17,38 +17,57 @@ if ! [ "${CONFIRM}" = "y" ]; then
     exit 1
 fi
 
-# Disable & Stop OpenVPN
 for CONFIG_NAME in $(systemctl list-units "openvpn-server@*" --no-legend | cut -d ' ' -f 1)
 do
     systemctl disable --now "${CONFIG_NAME}"
 done
 
-# Delete OpenVPN Configuration
 rm -rf /etc/openvpn/server/*
 
-systemctl stop httpd
-systemctl stop php-fpm
 
-# Remove Data
-rm -rf /var/lib/vpn-server-api/*
-rm -rf /var/lib/vpn-user-portal/*
-rm -f /etc/vpn-user-portal/oauth.key
+if [ -f /etc/fedora-release ]; then
+    systemctl stop httpd
+    systemctl stop php-fpm
+    rm -rf /var/lib/vpn-server-api/*
+    rm -rf /var/lib/vpn-user-portal/*
+    rm -f /etc/vpn-user-portal/oauth.key
+    rm -rf /var/lib/php/session/*
+    sudo -u apache vpn-user-portal-init
+    vpn-user-portal-generate-oauth-key
+    sudo -u apache vpn-server-api-init
+    systemctl start php-fpm
+    systemctl start httpd
+elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
+    systemctl stop httpd
+    systemctl stop php-fpm
+    rm -rf /var/lib/vpn-server-api/*
+    rm -rf /var/lib/vpn-user-portal/*
+    rm -f /etc/vpn-user-portal/oauth.key
+    rm -rf /var/lib/php/session/*
+    sudo -u apache vpn-user-portal-init
+    vpn-user-portal-generate-oauth-key
+    sudo -u apache vpn-server-api-init
+    systemctl start php-fpm
+    systemctl start httpd
+elif [ -f /etc/debian_version ]; then
+    systemctl stop apache2
+    systemctl stop php7.0-fpm
+    rm -rf /var/lib/vpn-server-api/*
+    rm -rf /var/lib/vpn-user-portal/*
+    rm -f /etc/vpn-user-portal/oauth.key
+    rm -rf /var/lib/php/sessions/*
+    sudo -u www-data vpn-user-portal-init
+    vpn-user-portal-generate-oauth-key
+    sudo -u www-data vpn-server-api-init
+    systemctl start php7.0-fpm
+    systemctl start apache2
+else
+    echo "ERROR: OS not supported!"
+    exit 1
+fi
 
-# Remove PHP Sessions
-rm -rf /var/lib/php/session/*
-
-# Initialize Database(s)
-sudo -u apache vpn-user-portal-init
-vpn-user-portal-generate-oauth-key
-sudo -u apache vpn-server-api-init
-
-systemctl start php-fpm
-systemctl start httpd
-
-# Regenerate OpenVPN Configuration 
 vpn-server-node-server-config
 
-# Enable & Start OpenVPN
 for CONFIG_NAME in /etc/openvpn/server/*.conf
 do
     CONFIG_NAME=$(basename "${CONFIG_NAME}" .conf)

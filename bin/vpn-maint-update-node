@@ -4,19 +4,18 @@ if ! [ "root" = "$(id -u -n)" ]; then
     echo "ERROR: ${0} must be run as root!"; exit 1
 fi
 
-# Install Updates
-if [ -x "$(command -v dnf)" ]; then
+if [ -f /etc/fedora-release ]; then
     dnf -y --refresh update
-elif [ -x "$(command -v yum)" ]; then
+elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
     yum clean expire-cache
     yum -y update
-else
-    echo "No dnf or yum available!"
+elif [ -f /etc/debian_version ]; then
+    apt-get update
+    apt-get -y dist-upgrade
+else 
+    echo "ERROR: OS not supported!"
     exit 1
 fi
 
-# Delete OpenVPN Configuration
 rm -rf /etc/openvpn/server/*
-
-# Regenerate OpenVPN Configuration 
 vpn-server-node-server-config

@@ -4,33 +4,33 @@ if ! [ "root" = "$(id -u -n)" ]; then
     echo "ERROR: ${0} must be run as root!"; exit 1
 fi
 
-# Stop OpenVPN
 systemctl stop openvpn-server@\* --all
 
-# Stop Web Server
-systemctl stop httpd
-systemctl stop php-fpm
-
-# Install Updates
-if [ -x "$(command -v dnf)" ]; then
+if [ -f /etc/fedora-release ]; then
+    systemctl stop httpd
+    systemctl stop php-fpm
     dnf -y --refresh update
-elif [ -x "$(command -v yum)" ]; then
+    systemctl start php-fpm
+    systemctl start httpd
+elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
+    systemctl stop httpd
+    systemctl stop php-fpm
     yum clean expire-cache
     yum -y update
+    systemctl start php-fpm
+    systemctl start httpd
+elif [ -f /etc/debian_version ]; then
+    systemctl stop apache2
+    systemctl stop php7.0-fpm
+    apt-get update
+    apt-get -y dist-upgrade
+    systemctl start php7.0-fpm
+    systemctl start apache2
 else
-    echo "No dnf or yum available!"
+    echo "ERROR: OS not supported!"
     exit 1
 fi
 
-# Start Web Server
-systemctl start php-fpm
-systemctl start httpd
-
-# Delete OpenVPN Configuration
 rm -rf /etc/openvpn/server/*
-
-# Regenerate OpenVPN Configuration 
 vpn-server-node-server-config
-
-# Start OpenVPN
 systemctl start openvpn-server@\* --all
