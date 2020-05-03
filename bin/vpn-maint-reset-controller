@@ -4,13 +4,15 @@ if ! [ "root" = "$(id -u -n)" ]; then
     echo "ERROR: ${0} must be run as root!"; exit 1
 fi
 
-echo "*****************************************************************"
-echo "*                                                               *"
-echo "* Are you sure you want to RESET your VPN server configuration? *" 
-echo "*                                                               *"
-echo "*                 THIS CAN *NOT* BE UNDONE!                     *"
-echo "*                                                               *"
-echo "*****************************************************************"
+echo "**********************************************************"
+echo "*                                                        *"
+echo "*    Are you sure you want to RESET your VPN server?     *"
+echo "*                                                        *"
+echo "* ALL DATA WILL BE LOST! ALL CONFIGURATION WILL BE KEPT! *"
+echo "*                                                        *"
+echo "*               THIS CAN *NOT* BE UNDONE!                *"
+echo "*                                                        *"
+echo "**********************************************************"
 echo
 printf "Continue? [n]: "; read -r CONFIRM
 if ! [ "${CONFIRM}" = "y" ]; then
