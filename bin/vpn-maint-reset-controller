@@ -1,0 +1,37 @@
+#!/bin/sh
+
+if ! [ "root" = "$(id -u -n)" ]; then
+    echo "ERROR: ${0} must be run as root!"; exit 1
+fi
+
+echo "*****************************************************************"
+echo "*                                                               *"
+echo "* Are you sure you want to RESET your VPN server configuration? *" 
+echo "*                                                               *"
+echo "*                 THIS CAN *NOT* BE UNDONE!                     *"
+echo "*                                                               *"
+echo "*****************************************************************"
+echo
+printf "Continue? [n]: "; read -r CONFIRM
+if ! [ "${CONFIRM}" = "y" ]; then
+    exit 1
+fi
+
+systemctl stop httpd
+systemctl stop php-fpm
+
+# Remove Data
+rm -rf /var/lib/vpn-server-api/*
+rm -rf /var/lib/vpn-user-portal/*
+rm -f /etc/vpn-user-portal/oauth.key
+
+# Remove PHP Sessions
+rm -rf /var/lib/php/session/*
+
+# Initialize Database(s)
+sudo -u apache vpn-user-portal-init
+vpn-user-portal-generate-oauth-key
+sudo -u apache vpn-server-api-init
+
+systemctl start php-fpm
+systemctl start httpd

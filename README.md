@@ -1,44 +1,43 @@
 This is a collection of scripts for maintaining your VPN server(s).
 
-**NOTE**: run the commands as `root` or use `sudo`!
-
 # Single System
 
-On a single system, i.e. you are using only one physical machine or VM you 
-can use the following scripts:
+## Apply Changes
 
-| Script                    | Function                                                                               |
-|-------------------------- | -------------------------------------------------------------------------------------- |
-| `vpn-maint-apply-changes` | Apply all outstanding configuration changes for the OpenVPN daemon and restart OpenVPN |
-| `vpn-maint-update-system` | Stop services, install updates, update OpenVPN configuration, start services           |
-| `vpn-maint-reset-system`  | Full *data* RESET. Configuration remains! Users deleted, New CA, new OAuth key, ...    |
+    $ sudo vpn-maint-apply-changes
 
-The `vpn-maint-reset-system` script is useful when you are testing with your 
-VPN server install and want to go to production. It will keep the server 
-configuration, but throw away all users, reset the CA and OAuth key. Clients 
-will be forced to authorize/authenticate again.
+## Update
 
-# Controller / Node(s)
+    $ sudo vpn-maint-update-system
 
-When having a controller and node(s), you use the following scripts:
+## Reset
+
+    $ sudo vpn-maint-reset-system
+
+# Multiple Systems
 
 ## Controller
 
-**NOTE**: first stop all nodes by running `vpn-maint-stop-node` on all nodes!
+### Update
 
-| Script                        | Function                                            |
-|------------------------------ | --------------------------------------------------- |
-| `vpn-maint-update-controller` | Stop services, install all updates, restart service |
+    $ sudo vpn-maint-update-controller
+
+### Reset
+
+    $ sudo vpn-maint-reset-controller
 
 ## Node
 
-**NOTE**: after stopping all nodes, update the controller first by running 
-`vpn-maint-update-controller` on the controller. Then run 
-`vpn-maint-update-node` and then `vpn-maint-start-node`.
+### Apply Changes
 
-| Script                    | Function                                                                               |
-|-------------------------- | -------------------------------------------------------------------------------------- |
-| `vpn-maint-apply-changes` | Apply all outstanding configuration changes for the OpenVPN daemon and restart OpenVPN |
-| `vpn-maint-stop-node`     | Stop OpenVPN processes                                                                 |
-| `vpn-maint-update-node`   | Install updates, update OpenVPN configuration                                          |
-| `vpn-maint-start-node`    | Start OpenVPN processes                                                                |
+    $ sudo vpn-maint-apply-changes
+
+### Update
+
+    $ sudo vpn-maint-stop-node
+    $ sudo vpn-maint-update-node
+    $ sudo vpn-maint-start-node
+
+### Reset
+
+    $ sudo vpn-maint-apply-changes
