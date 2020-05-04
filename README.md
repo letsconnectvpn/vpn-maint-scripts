@@ -61,7 +61,7 @@ update a bunch of servers at once.
 ## Single System
 
 If you have multiple servers to maintain, you may want to use a script like 
-this.
+this. **NOTE**: this does not consider the need to reboot the server(s).
 
     #!/bin/sh
 
@@ -77,29 +77,33 @@ this.
 
 ## Multiple Systems
 
-**NOTE**: this is UNTESTED! Also, it does not consider the need to reboot the
-machines, e.g. when there are kernel or system library updates.
+**NOTE**: this does not consider the need to reboot the server(s).
 
     #!/bin/sh
 
     CONTROLLER=frkovpn.tuxed.net
     NODES="
-	    node-a.frkovpn.tuxed.net
-	    node-b.frkovpn.tuxed.net
+        node-a.frkovpn.tuxed.net
+        node-b.frkovpn.tuxed.net
     "
 
     # stop all nodes
     for NODE in ${NODES}
     do
-	    ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-stop-node"
+        echo "Stopping NODE ${NODE}..."
+        ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-stop-node"
     done
 
     # update controller
+    echo "Updating CONTROLLER ${CONTROLLER}..."
     ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-controller"
 
     # update nodes
     for NODE in ${NODES}
     do
-	    ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-node"
-	    ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-start-node"
+        echo "Updating NODE ${NODE}..."
+        ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-node"
+        echo "Starting NODE ${NODE}..."
+        ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-start-node"
     done
+
