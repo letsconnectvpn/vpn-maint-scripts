@@ -1,20 +1,39 @@
-This is a collection of scripts for maintaining your VPN server(s).
+# Introduction
+
+This is a collection of scripts for maintaining your VPN server(s). These 
+SHOULD be used for handling day to day operation, like applying changes and 
+installing updates. Feel free to take the content of these scripts and use them
+in something like Ansible.
+
+**NOTE**: only use these scripts during _maintenance windows_ as they wil in 
+most cases restart the OpenVPN processes!
 
 # Single System
 
 ## Apply Changes
 
+(Re)write OpenVPN server configuration files based on updated configuration and 
+restart OpenVPN:
+
     $ sudo vpn-maint-apply-changes
 
 ## Update
+
+Install OS and VPN software updates:
 
     $ sudo vpn-maint-update-system
 
 ## Reset
 
+**NOTE**: only use this right before going to production to get rid of all 
+data!
+
     $ sudo vpn-maint-reset-system
 
 # Multiple Systems
+
+See the scripts under [Automation](#automation) to see the order in which to
+execute the scripts.
 
 ## Controller
 
