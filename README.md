@@ -115,7 +115,7 @@ this. **NOTE**: this does not consider the need to reboot the server(s).
 
     # update controller
     echo "Updating CONTROLLER ${CONTROLLER}..."
-    ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-controller"
+    ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-controller -y"
 
     # update nodes
     for NODE in ${NODES}
