@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if ! [ "root" = "$(id -u -n)" ]; then
+    echo "ERROR: ${0} must be run as root!"; exit 1
+fi
+
+CONFIG_FILE_LIST="
+    /etc/vpn-user-portal/config.php
+    /etc/vpn-server-api/config.php
+    /etc/vpn-server-node/config.php
+"
+
+for CONFIG_FILE in ${CONFIG_FILE_LIST}; do
+    if [ -f "${CONFIG_FILE}" ]; then
+        if ! /usr/bin/php -l "${CONFIG_FILE}" >/dev/null 2>/dev/null; then
+            echo "Syntax error in \"${CONFIG_FILE}\":"
+            /usr/bin/php -l "${CONFIG_FILE}"
+            exit 1
+        fi
+    fi
+done
