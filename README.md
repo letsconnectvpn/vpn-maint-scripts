@@ -10,6 +10,14 @@ most cases restart the OpenVPN processes!
 
 # Single System
 
+## Verify Configuration Files
+
+In order to make sure your VPN configuration files are without syntax errors:
+
+    $ sudo vpn-maint-verify-config
+
+Run this after every configuration change!
+
 ## Apply Changes
 
 (Re)write OpenVPN server configuration files based on updated configuration and 
