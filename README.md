@@ -85,6 +85,12 @@ If you are on a host where you can do password-less SSH logins and don't need
 to provide a password when using `sudo`, you can use the following scripts to
 update a bunch of servers at once.
 
+**NOTE**: make sure you are NOT connected to the VPN server itself when running
+these scripts as they will terminate the connection!
+
+**NOTE**: the scripts need to be updated to run in `tmux` to avoid trouble if 
+you lose connection during the `dnf`/`yum`/`apt` updates.
+
 ## Single System
 
 If you have multiple servers to maintain, you may want to use a script like 
