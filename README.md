@@ -94,7 +94,7 @@ you lose connection during the `dnf`/`yum`/`apt` updates.
 ## Single System
 
 If you have multiple servers to maintain, you may want to use a script like 
-this. **NOTE**: this does not consider the need to reboot the server(s).
+this. Use the `--reboot` flag to reboot the servers after updating...
 
     #!/bin/sh
 
@@ -105,12 +105,19 @@ this. **NOTE**: this does not consider the need to reboot the server(s).
 
     for SERVER in ${SERVER_LIST}; do
         echo "*** ${SERVER} ***"
-	    ssh "${SERVER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-system"
+        ssh "${SERVER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-system"
+        if [ "--reboot" = "${1}" ]; then
+            echo "Rebooting SERVER ${SERVER}..."
+	        ssh "${SERVER}" "/usr/bin/sudo /usr/sbin/reboot"
+        fi
     done
 
 ## Multiple Systems
 
-**NOTE**: this does not consider the need to reboot the server(s).
+This stops the nodes, updates the controller, node(s) and starts the node(s) 
+again. If you want to reboot the controller and node(s), use the `--reboot` 
+flag. Modify `REBOOT_TIME_CONTROLLER` if you want to give your controller more
+time to recover from a reboot...
 
     #!/bin/sh
 
@@ -119,6 +126,8 @@ this. **NOTE**: this does not consider the need to reboot the server(s).
         node-a.frkovpn.tuxed.net
         node-b.frkovpn.tuxed.net
     "
+
+    REBOOT_TIME_CONTROLLER=180
 
     # stop all nodes
     for NODE in ${NODES}
@@ -130,13 +139,23 @@ this. **NOTE**: this does not consider the need to reboot the server(s).
     # update controller
     echo "Updating CONTROLLER ${CONTROLLER}..."
     ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-controller -y"
+    if [ "--reboot" = "${1}" ]; then
+    echo "Rebooting CONTROLLER ${CONTROLLER}..."
+        ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/reboot"
+        echo "Waiting ${REBOOT_TIME_CONTROLLER}s for CONTROLLER ${CONTROLLER} to come back..."
+        sleep ${REBOOT_TIME_CONTROLLER}
+    fi
 
     # update nodes
     for NODE in ${NODES}
     do
         echo "Updating NODE ${NODE}..."
         ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-node"
-        echo "Starting NODE ${NODE}..."
-        ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-start-node"
+        if [ "--reboot" = "${1}" ]; then
+            echo "Rebooting NODE ${NODE}..."
+            ssh "${NODE}" "/usr/bin/sudo /usr/sbin/reboot"
+        else
+            echo "Starting NODE ${NODE}..."
+            ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-start-node"
+        fi
     done
-
