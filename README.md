@@ -3,9 +3,9 @@
 This is a collection of scripts for maintaining your VPN server(s). These 
 SHOULD be used for handling day to day operation, like applying changes and 
 installing updates. Feel free to take the content of these scripts and use them
-in something like Ansible.
+in something like [Ansible](https://www.ansible.com/).
 
-**NOTE**: only use these scripts during _maintenance windows_ as they wil in 
+**NOTE**: only use these scripts during _maintenance windows_ as they will in 
 most cases restart the OpenVPN processes!
 
 # Single System
