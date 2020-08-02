@@ -52,8 +52,9 @@ elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
     systemctl start php-fpm
     systemctl start httpd
 elif [ -f /etc/debian_version ]; then
+    PHP_VERSION=$(/usr/sbin/phpquery -V)
     systemctl stop apache2
-    systemctl stop php7.0-fpm
+    systemctl stop "php${PHP_VERSION}-fpm"
     rm -rf /var/lib/vpn-server-api/*
     rm -rf /var/lib/vpn-user-portal/*
     rm -f /etc/vpn-user-portal/oauth.key
@@ -61,7 +62,7 @@ elif [ -f /etc/debian_version ]; then
     sudo -u www-data vpn-user-portal-init
     vpn-user-portal-generate-oauth-key
     sudo -u www-data vpn-server-api-init
-    systemctl start php7.0-fpm
+    systemctl start "php${PHP_VERSION}-fpm"
     systemctl start apache2
 else
     echo "ERROR: OS not supported!"

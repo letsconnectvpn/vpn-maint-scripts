@@ -20,11 +20,13 @@ elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
     systemctl start php-fpm
     systemctl start httpd
 elif [ -f /etc/debian_version ]; then
+    PHP_VERSION=$(/usr/sbin/phpquery -V)
     systemctl stop apache2
-    systemctl stop php7.0-fpm
+    systemctl stop "php${PHP_VERSION}-fpm"
     apt-get update
-    apt-get -y dist-upgrade
-    systemctl start php7.0-fpm
+    # debconf(7)
+    DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
+    systemctl start "php${PHP_VERSION}-fpm"
     systemctl start apache2
 else
     echo "ERROR: OS not supported!"

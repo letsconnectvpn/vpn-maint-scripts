@@ -11,7 +11,8 @@ elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
     yum -y update
 elif [ -f /etc/debian_version ]; then
     apt-get update
-    apt-get -y dist-upgrade
+    # debconf(7)
+    DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
 else 
     echo "ERROR: OS not supported!"
     exit 1
