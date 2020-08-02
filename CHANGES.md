@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.0 (...)
+## 1.2.0 (2020-08-02)
 - add `vpn-main-verify-config` to verify the VPN configuration files
 - support all PHP versions on Debian (derivatives)
 - make `apt-get dist-upgrade` non-interactive (does not ask questions)
