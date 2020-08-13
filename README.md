@@ -1,3 +1,11 @@
+**Summary**: Collection of scripts to maintain your VPN server
+
+**Description**: This is a collection of scripts for maintaining your VPN 
+server(s). These SHOULD be used for handling day to day operation, like 
+applying changes and installing updates. 
+
+**License**:  AGPL-3.0-or-later
+
 # Introduction
 
 This is a collection of scripts for maintaining your VPN server(s). These 
