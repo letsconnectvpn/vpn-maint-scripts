@@ -8,7 +8,9 @@ echo "**********************************************************"
 echo "*                                                        *"
 echo "*    Are you sure you want to RESET your VPN server?     *"
 echo "*                                                        *"
-echo "* ALL DATA WILL BE LOST! ALL CONFIGURATION WILL BE KEPT! *"
+echo "*    ALL DATA AND LOCALLY ADDED USERS WILL BE LOST!      *"
+echo "*                                                        *"
+echo "*            ALL CONFIGURATION WILL BE KEPT!             *"
 echo "*                                                        *"
 echo "*               THIS CAN *NOT* BE UNDONE!                *"
 echo "*                                                        *"
@@ -19,19 +21,8 @@ if ! [ "${CONFIRM}" = "y" ]; then
     exit 1
 fi
 
-if [ -f /etc/fedora-release ]; then
-    systemctl stop httpd
-    systemctl stop php-fpm
-    rm -rf /var/lib/vpn-server-api/*
-    rm -rf /var/lib/vpn-user-portal/*
-    rm -f /etc/vpn-user-portal/oauth.key
-    rm -rf /var/lib/php/session/*
-    sudo -u apache vpn-user-portal-init
-    vpn-user-portal-generate-oauth-key
-    sudo -u apache vpn-server-api-init
-    systemctl start php-fpm
-    systemctl start httpd
-elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
+if [ -f /etc/redhat-release ]; then
+    # Fedora, CentOS, RHEL
     systemctl stop httpd
     systemctl stop php-fpm
     rm -rf /var/lib/vpn-server-api/*
@@ -44,6 +35,7 @@ elif [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
     systemctl start php-fpm
     systemctl start httpd
 elif [ -f /etc/debian_version ]; then
+    # Debian, Ubuntu
     PHP_VERSION=$(/usr/sbin/phpquery -V)
     systemctl stop apache2
     systemctl stop "php${PHP_VERSION}-fpm"
