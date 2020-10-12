@@ -116,7 +116,7 @@ this. Use the `--reboot` flag to reboot the servers after updating...
         ssh "${SERVER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-system"
         if [ "--reboot" = "${1}" ]; then
             echo "Rebooting SERVER ${SERVER}..."
-	        ssh "${SERVER}" "/usr/bin/sudo /usr/sbin/reboot"
+	        ssh "${SERVER}" "/usr/bin/sudo /sbin/reboot"
         fi
     done
 
@@ -149,7 +149,7 @@ time to recover from a reboot...
     ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-controller -y"
     if [ "--reboot" = "${1}" ]; then
     echo "Rebooting CONTROLLER ${CONTROLLER}..."
-        ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/reboot"
+        ssh "${CONTROLLER}" "/usr/bin/sudo /sbin/reboot"
         echo "Waiting ${REBOOT_TIME_CONTROLLER}s for CONTROLLER ${CONTROLLER} to come back..."
         sleep ${REBOOT_TIME_CONTROLLER}
     fi
@@ -161,7 +161,7 @@ time to recover from a reboot...
         ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-node"
         if [ "--reboot" = "${1}" ]; then
             echo "Rebooting NODE ${NODE}..."
-            ssh "${NODE}" "/usr/bin/sudo /usr/sbin/reboot"
+            ssh "${NODE}" "/usr/bin/sudo /sbin/reboot"
         else
             echo "Starting NODE ${NODE}..."
             ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-start-node"
