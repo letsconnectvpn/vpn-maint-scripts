@@ -16,8 +16,8 @@ echo "*               THIS CAN *NOT* BE UNDONE!                *"
 echo "*                                                        *"
 echo "**********************************************************"
 echo
-printf "Continue? [n]: "; read -r CONFIRM
-if ! [ "${CONFIRM}" = "y" ]; then
+printf "Continue? (y/n) [n]: "; read -r CONFIRM
+if ! [ "${CONFIRM}" = "y" ] && ! [ "${CONFIRM}" = "Y" ]; then
     exit 1
 fi
 

@@ -5,8 +5,8 @@ if ! [ "root" = "$(id -u -n)" ]; then
 fi
 
 if ! [ "-y" = "${1}" ]; then
-    printf "Did you stop your node(s) first? [n]: "; read -r CONFIRM
-    if ! [ "${CONFIRM}" = "y" ]; then
+    printf "Did you stop your node(s) first? (y/n) [n]: "; read -r CONFIRM
+    if ! [ "${CONFIRM}" = "y" ] && ! [ "${CONFIRM}" = "Y" ]; then
         exit 1
     fi
 fi
