@@ -138,7 +138,7 @@ time to recover from a reboot...
     for NODE in ${NODES}
     do
         echo "Stopping NODE ${NODE}..."
-        ssh -t "${NODE}" "/usr/bin/tmux '/usr/bin/sudo /usr/sbin/vpn-maint-stop-node'"
+        ssh -t "${NODE}" "/usr/bin/tmux new '/usr/bin/sudo /usr/sbin/vpn-maint-stop-node'"
     done
 
     # update controller
