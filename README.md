@@ -96,9 +96,6 @@ update a bunch of servers at once.
 **NOTE**: make sure you are NOT connected to the VPN server itself when running
 these scripts as they will terminate the connection!
 
-**NOTE**: the scripts need to be updated to run in `tmux` to avoid trouble if 
-you lose connection during the `dnf`/`yum`/`apt` updates.
-
 ## Single System
 
 If you have multiple servers to maintain, you may want to use a script like 
@@ -113,7 +110,7 @@ this. Use the `--reboot` flag to reboot the servers after updating...
 
     for SERVER in ${SERVER_LIST}; do
         echo "*** ${SERVER} ***"
-        ssh "${SERVER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-system"
+        ssh -t "${SERVER}" "/usr/bin/tmux new '/usr/bin/sudo /usr/sbin/vpn-maint-update-system'"
         if [ "--reboot" = "${1}" ]; then
             echo "Rebooting SERVER ${SERVER}..."
 	        ssh "${SERVER}" "/usr/bin/sudo /sbin/reboot"
@@ -141,12 +138,13 @@ time to recover from a reboot...
     for NODE in ${NODES}
     do
         echo "Stopping NODE ${NODE}..."
-        ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-stop-node"
+        ssh -t "${NODE}" "/usr/bin/tmux '/usr/bin/sudo /usr/sbin/vpn-maint-stop-node'"
     done
 
     # update controller
     echo "Updating CONTROLLER ${CONTROLLER}..."
-    ssh "${CONTROLLER}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-controller -y"
+
+    ssh -t "${CONTROLLER}" "/usr/bin/tmux new '/usr/bin/sudo /usr/sbin/vpn-maint-update-controller -y'"
     if [ "--reboot" = "${1}" ]; then
     echo "Rebooting CONTROLLER ${CONTROLLER}..."
         ssh "${CONTROLLER}" "/usr/bin/sudo /sbin/reboot"
@@ -158,12 +156,12 @@ time to recover from a reboot...
     for NODE in ${NODES}
     do
         echo "Updating NODE ${NODE}..."
-        ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-update-node"
+        ssh -t "${NODE}" "/usr/bin/tmux new '/usr/bin/sudo /usr/sbin/vpn-maint-update-node'"
         if [ "--reboot" = "${1}" ]; then
             echo "Rebooting NODE ${NODE}..."
             ssh "${NODE}" "/usr/bin/sudo /sbin/reboot"
         else
             echo "Starting NODE ${NODE}..."
-            ssh "${NODE}" "/usr/bin/sudo /usr/sbin/vpn-maint-start-node"
+            ssh -t "${NODE}" "/usr/bin/tmux new '/usr/bin/sudo /usr/sbin/vpn-maint-start-node'"
         fi
     done
