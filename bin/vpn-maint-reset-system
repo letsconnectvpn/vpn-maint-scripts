@@ -21,7 +21,7 @@ if ! [ "${CONFIRM}" = "y" ] && ! [ "${CONFIRM}" = "Y" ]; then
     exit 1
 fi
 
-for CONFIG_NAME in $(systemctl list-units "openvpn-server@*" --no-legend | cut -d ' ' -f 1)
+for CONFIG_NAME in $(systemctl list-units "openvpn-server@*" --no-legend | awk '{print $1}')
 do
     systemctl disable --now "${CONFIG_NAME}"
 done
