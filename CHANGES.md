@@ -3,6 +3,7 @@
 ## 1.2.1 (...)
 - simplify reset scripts
 - warn locally added users will be deleted when doing reset
+- fix scripts on Fedora >= 33
 
 ## 1.2.0 (2020-08-02)
 - add `vpn-main-verify-config` to verify the VPN configuration files
