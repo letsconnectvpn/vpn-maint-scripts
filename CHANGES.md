@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.1 (...)
+## 1.2.1 (2020-12-08)
 - simplify reset scripts
 - warn locally added users will be deleted when doing reset
 - fix scripts on Fedora >= 33
