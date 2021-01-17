@@ -62,8 +62,13 @@ fi
 
 vpn-server-node-server-config
 
-for CONFIG_NAME in /etc/openvpn/server/*.conf
+# Enable & Start OpenVPN
+for F in /etc/openvpn/server/*
 do
-    CONFIG_NAME=$(basename "${CONFIG_NAME}" .conf)
-    systemctl enable --now "openvpn-server@${CONFIG_NAME}"
+    case ${F} in
+        *.conf)
+            CONFIG_NAME=$(basename "${F}" .conf)
+            systemctl enable --now "openvpn-server@${CONFIG_NAME}"
+        ;;
+    esac
 done

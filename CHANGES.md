@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 (...)
+- deal with unexpected glob when looping over files in `/etc/openvpn/server` 
+  which could cause the `openvpn-server@\x2a.service` to be enabled when no 
+  config files exist in `/etc/openvpn/server`
+  
 ## 1.2.1 (2020-12-08)
 - simplify reset scripts
 - warn locally added users will be deleted when doing reset
